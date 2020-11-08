@@ -11,6 +11,7 @@ class IntroButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      radius: 15,
       onTap: onPressed,
       child: child,
     );

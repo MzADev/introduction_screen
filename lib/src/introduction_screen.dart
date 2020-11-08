@@ -11,7 +11,7 @@ import 'package:introduction_screen/src/ui/intro_page.dart';
 
 class IntroductionScreen extends StatefulWidget {
   /// All pages of the onboarding
-  final List<PageViewModel> pages;
+  final List<Widget> pages;
 
   /// Callback when Done button is pressed
   final VoidCallback onDone;
@@ -248,7 +248,7 @@ class IntroductionScreenState extends State<IntroductionScreen> {
               physics: widget.freeze
                   ? const NeverScrollableScrollPhysics()
                   : const BouncingScrollPhysics(),
-              children: widget.pages.map((p) => IntroPage(page: p)).toList(),
+              children: widget.pages,
               onPageChanged: widget.onChange,
             ),
           ),
