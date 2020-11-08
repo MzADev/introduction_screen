@@ -31,6 +31,9 @@ class IntroductionScreen extends StatefulWidget {
   /// Next button
   final Widget next;
 
+  /// Previous button
+  final Widget previous;
+
   /// Is the Skip button should be display
   ///
   /// @Default `false`
@@ -104,34 +107,34 @@ class IntroductionScreen extends StatefulWidget {
   /// Color of done button
   final Color doneColor;
 
-
-  const IntroductionScreen({
-    Key key,
-    @required this.pages,
-    @required this.onDone,
-    @required this.done,
-    this.onSkip,
-    this.onChange,
-    this.skip,
-    this.next,
-    this.showSkipButton = false,
-    this.showNextButton = true,
-    this.isProgress = true,
-    this.isProgressTap = true,
-    this.freeze = false,
-    this.globalBackgroundColor,
-    this.dotsDecorator = const DotsDecorator(),
-    this.animationDuration = 350,
-    this.initialPage = 0,
-    this.skipFlex = 1,
-    this.dotsFlex = 1,
-    this.nextFlex = 1,
-    this.curve = Curves.easeIn,
-    this.color,
-    this.skipColor,
-    this.nextColor,
-    this.doneColor
-  })  : assert(pages != null),
+  const IntroductionScreen(
+      {Key key,
+      @required this.pages,
+      @required this.onDone,
+      @required this.done,
+      this.onSkip,
+      this.onChange,
+      this.skip,
+      this.next,
+      this.previous,
+      this.showSkipButton = false,
+      this.showNextButton = true,
+      this.isProgress = true,
+      this.isProgressTap = true,
+      this.freeze = false,
+      this.globalBackgroundColor,
+      this.dotsDecorator = const DotsDecorator(),
+      this.animationDuration = 350,
+      this.initialPage = 0,
+      this.skipFlex = 1,
+      this.dotsFlex = 1,
+      this.nextFlex = 1,
+      this.curve = Curves.easeIn,
+      this.color,
+      this.skipColor,
+      this.nextColor,
+      this.doneColor})
+      : assert(pages != null),
         assert(
           pages.length > 0,
           "You provide at least one page on introduction screen !",
@@ -165,6 +168,10 @@ class IntroductionScreenState extends State<IntroductionScreen> {
 
   void next() {
     animateScroll(min(_currentPage.round() + 1, widget.pages.length - 1));
+  }
+
+  void previous() {
+    animateScroll(min(_currentPage.round() - 1, widget.pages.length + 1));
   }
 
   Future<void> _onSkip() async {
@@ -203,6 +210,7 @@ class IntroductionScreenState extends State<IntroductionScreen> {
   @override
   Widget build(BuildContext context) {
     final isLastPage = (_currentPage.round() == widget.pages.length - 1);
+    final isFirstPage = (_currentPage.round() == 0);
     bool isSkipBtn = (!_isSkipPressed && !isLastPage && widget.showSkipButton);
 
     final skipBtn = IntroButton(
@@ -221,6 +229,12 @@ class IntroductionScreenState extends State<IntroductionScreen> {
       child: widget.done,
       color: widget.doneColor ?? widget.color,
       onPressed: widget.onDone,
+    );
+
+    final previousBtn = IntroButton(
+      child: widget.previous,
+      color: widget.doneColor ?? widget.color,
+      onPressed: !_isScrolling ? previous : null,
     );
 
     return Scaffold(
@@ -245,10 +259,17 @@ class IntroductionScreenState extends State<IntroductionScreen> {
             child: SafeArea(
               child: Row(
                 children: [
+                  if (widget.showSkipButton)
+                    Expanded(
+                      flex: widget.skipFlex,
+                      child: isSkipBtn
+                          ? skipBtn
+                          : Opacity(opacity: 0.0, child: skipBtn),
+                    ),
                   Expanded(
                     flex: widget.skipFlex,
-                    child: isSkipBtn
-                        ? skipBtn
+                    child: !isFirstPage
+                        ? previousBtn
                         : Opacity(opacity: 0.0, child: skipBtn),
                   ),
                   Expanded(

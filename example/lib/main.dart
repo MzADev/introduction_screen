@@ -111,9 +111,10 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       ],
       onDone: () => _onIntroEnd(context),
       //onSkip: () => _onIntroEnd(context), // You can override onSkip callback
-      showSkipButton: true,
+      showSkipButton: false,
       skipFlex: 0,
       nextFlex: 0,
+      previous: Icon(Icons.arrow_back_ios, color: Colors.red,),
       skip: const Text('Skip'),
       next: const Icon(Icons.arrow_forward),
       done: const Text('Done', style: TextStyle(fontWeight: FontWeight.w600)),
